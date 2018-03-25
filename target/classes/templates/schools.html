@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"> 
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
+        <title>Food in our fridge</title>
+        <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular.min.js"></script>
+        <script src="js/schools.js"></script>
+
+    </head>
+    <body ng-app="schools" ng-controller="SchoolsController">
+    <style>
+        body {
+            background-image: url(/img/donuts.jpg);
+            font-family: "Comic Sans MS";
+        }
+        .styled {
+            height:25px;
+            width:200px;
+            border-radius:10px;
+            box-shadow:none;
+        }
+
+
+        .button {
+            margin-top:10px;
+            margin-bottom:10px;
+            min-width:200px;
+            min-height:10px;
+            padding:10px;
+            background-color:#0275d8;
+            color:white;
+            border:0px;
+            border-radius:15px;
+            font-size: 16px;
+        }
+
+        .button a {
+            text-decoration: none;
+            color:white;
+        }
+
+        @keyframes changecolor {
+            from {background-color:#0275d8}
+            to {background-color:orange;}
+        }
+
+        .button:hover {
+            animation-name: changecolor;
+            animation-duration:.1s;
+            background-color:orange;
+            cursor:pointer;
+        }
+
+        .auth {
+            margin-bottom:10px;
+            margin-top:10px;
+            margin-left:20px;
+        }
+
+        .container {
+            background-color:white;
+            border:2px solid pink;
+            border-radius:100px 100px 10px 10px;
+            padding-bottom:100px;
+        }
+
+
+
+    </style>
+    <div class="container">
+    <h1 style="text-align:center;">Список продуктов</h1>
+        <p style="text-align:center;">Доброго времени суток! Это Ваш холодильник. Буду рад новым пополнениям. :)</p>
+    <div style="margin-left:20px;display:inline-block">
+        <div class="auth" sec:authorize="isAnonymous()" >
+
+
+            <button style="margin-left:-20px;cursor:default;" class="button"><a href="/login">Войти</a></button>
+        </div>
+
+        <div class="auth" sec:authorize="isAuthenticated()">
+            <button style="margin-left:-20px;cursor:default;" class="button"><a href="/login?logout">Выйти</a></button>
+        </div>
+
+            <form role="form" ng-submit="searchSchools()">
+                <div style="display:inline-block;" >
+                    <label>Поиск продуктов</label>
+                    <div>
+                        <input class="styled" type="text" name="search" ng-model="search"/>
+                    </div>
+                </div>
+                <div>
+                    <div>
+                        <input class="button" type="submit" value="Поиск" />
+                    </div>
+                </div>
+            </form>
+        </div>
+
+
+
+        <div ng-controller="getSchools" ng-show="schoolsList.length > 0">
+            <table id="schoolsTable" style="width:100%;text-align:left;">
+                <thead>
+                    <tr>
+                        <th>ИД</th>
+                        <th>Номер продукта</th>
+                        <th>Название продукта</th>
+                        <th>Действие</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="school in schoolsList" id="{{school.id}}">
+                        <td>{{school.id}}</td>
+                        <td>{{school.number}}</td>
+                        <td>{{school.name}}</td>
+                        <td><div sec:authorize="isAuthenticated()"><input class="button" type="button" value="Удалить" ng-click="delete(school.id)"/></div></td>
+
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div style="margin-left:20px;display:inline-block;" sec:authorize="isAuthenticated()" >
+            <form role="form" ng-submit="addSchool()">
+                <div style="display:inline-block">
+                    <label>Номер</label>
+                    <div>
+                        <input class="styled" type="text" name="number" ng-model="number" />
+                    </div>
+                </div>
+                <div style="display:inline-block">
+                    <label >Название продукта</label>
+                    <div>
+                        <input class="styled" type="text" name="name" ng-model="name" />
+                    </div>
+                </div>
+                <div>
+                    <div>
+                        <input class="button" type="submit" value="Добавить"/>
+                    </div>
+                </div>
+            </form>
+        </div>
+</div>
+    </body>
+</html>
